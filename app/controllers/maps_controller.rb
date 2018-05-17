@@ -24,6 +24,8 @@ class MapsController < ApplicationController
 
   # GET /maps/render_map
   def render_map
+    ActionCable.server.broadcast 'game_channel',
+                                 content: 'asd'
   end
 
   # POST /maps
