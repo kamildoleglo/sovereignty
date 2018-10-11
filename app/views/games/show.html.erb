@@ -5,15 +5,13 @@
   <%= @game.map %>
 </p>
 
-<p>
-  <strong>User:</strong>
-  <%= @game.user %>
-</p>
 
-<p>
-  <strong>Join:</strong>
+  <span id="join_id">
   <%= @game.join_id %>
-</p>
+  </span>
+
+</br>
+<canvas id="hexmap" width="660" height="624"></canvas>
 
 <%= link_to 'Edit', edit_game_path(@game) %> |
 <%= link_to 'Back', games_path %>

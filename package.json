@@ -1,5 +1,8 @@
 {
   "name": "sovereign",
   "private": true,
-  "dependencies": {}
+  "dependencies": {
+    "honeycomb-grid": "^1.4.0",
+    "pixi.js": "^4.8.2"
+  }
 }

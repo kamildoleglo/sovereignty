@@ -1,5 +1,6 @@
 class MapsController < ApplicationController
   before_action :set_map, only: [:show, :edit, :update, :destroy]
+  before_action :authenticate_user!
 
   # GET /maps
   # GET /maps.json
@@ -22,16 +23,18 @@ class MapsController < ApplicationController
   def edit
   end
 
-  # GET /maps/render_map
+  # GET /maps/render
   def render_map
     ActionCable.server.broadcast 'game_channel',
                                  content: 'asd'
+    console
   end
 
   # POST /maps
   # POST /maps.json
   def create
     @map = Map.new(map_params)
+    @map.user_id = current_user.id
 
     respond_to do |format|
       if @map.save
@@ -70,13 +73,13 @@ class MapsController < ApplicationController
 
   private
 
-    # Use callbacks to share common setup or constraints between actions.
-    def set_map
-      @map = Map.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_map
+    @map = Map.find(params[:id])
+  end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def map_params
-      params.require(:map).permit(:name, :description, :data, :user_id)
-    end
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def map_params
+    params.require(:map).permit(:name, :description, :size_x, :size_y)
+  end
 end

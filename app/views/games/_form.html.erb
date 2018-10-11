@@ -13,17 +13,7 @@
 
   <div class="field">
     <%= form.label :map_id %>
-    <%= form.text_field :map_id, id: :game_map_id %>
-  </div>
-
-  <div class="field">
-    <%= form.label :user_id %>
-    <%= form.text_field :user_id, id: :game_user_id %>
-  </div>
-
-  <div class="field">
-    <%= form.label :join_id %>
-    <%= form.text_field :join_id, id: :game_join_id %>
+    <%= form.collection_select :map_id, current_user.maps, :id, :name %>
   </div>
 
   <div class="actions">

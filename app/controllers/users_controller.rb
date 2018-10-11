@@ -8,11 +8,7 @@ class UsersController < ApplicationController
 
   def show
     @user = User.find(params[:id])
-    unless current_user.admin?
-      unless @user == current_user
-        redirect_to root_path, :alert => "Access denied."
-      end
-    end
+    redirect_to root_path, :alert => "Access denied." unless current_user.admin? || @user == current_user
   end
 
   def update
@@ -27,14 +23,14 @@ class UsersController < ApplicationController
   def destroy
     user = User.find(params[:id])
     user.destroy
-    redirect_to users_path, :notice => "User deleted."
+    redirect_to users_path, notice: 'User deleted.'
   end
 
   private
 
   def admin_only
     unless current_user.admin?
-      redirect_to root_path, :alert => "Access denied."
+      redirect_to root_path, alert: 'Access denied.'
     end
   end
 

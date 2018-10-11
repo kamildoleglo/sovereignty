@@ -10,7 +10,34 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180420202941) do
+ActiveRecord::Schema.define(version: 20180602102018) do
+
+  create_table "entities", force: :cascade do |t|
+    t.integer "position_x"
+    t.integer "position_y"
+    t.boolean "can_be_overlapped"
+    t.string "name"
+    t.integer "game_id"
+    t.integer "map_id"
+    t.integer "color"
+    t.integer "size"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id"
+    t.index ["game_id"], name: "index_entities_on_game_id"
+    t.index ["map_id"], name: "index_entities_on_map_id"
+    t.index ["user_id"], name: "index_entities_on_user_id"
+  end
+
+  create_table "games", force: :cascade do |t|
+    t.integer "map_id"
+    t.integer "user_id"
+    t.string "join_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["map_id"], name: "index_games_on_map_id"
+    t.index ["user_id"], name: "index_games_on_user_id"
+  end
 
   create_table "maps", force: :cascade do |t|
     t.string "name"
@@ -19,6 +46,8 @@ ActiveRecord::Schema.define(version: 20180420202941) do
     t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "size_x"
+    t.integer "size_y"
     t.index ["user_id"], name: "index_maps_on_user_id"
   end
 
