@@ -10,8 +10,10 @@
   <%= @game.join_id %>
   </span>
 
+<input type="hidden" id="user_id" value= "<%= @uuid %>">
+
 </br>
-<canvas id="hexmap" width="660" height="624"></canvas>
+<div id = 'hexmap'></div>
 
 <%= link_to 'Edit', edit_game_path(@game) %> |
 <%= link_to 'Back', games_path %>

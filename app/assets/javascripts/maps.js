@@ -6,32 +6,81 @@
 document.addEventListener('turbolinks:load', function(){
 
     let canvas = document.getElementById('hexmap');
-    let map = new HexMap(canvas, 10, 10);
 
-    canvas.addEventListener("mousemove", function(eventInfo) {
-        let x = eventInfo.offsetX || eventInfo.layerX;
-        let y = eventInfo.offsetY || eventInfo.layerY;
+    const app = new PIXI.Application({ transparent: true, antialias: true, width: 720, height: 480 });
+    const graphics = new PIXI.Graphics();
+
+    const Hex = Honeycomb.extendHex({ size: 40,
+        render(app, graphics) {
+            const { x, y } = this.toPoint();
+            const corners = this.corners().map(corner => corner.add({x, y}));
+
+            // separate the first from the other corners
+            const [firstCorner, ...otherCorners] = corners;
+
+            // move the "pen" to the first corner
+            graphics.moveTo(firstCorner.x, firstCorner.y);
+            // draw lines to the other corners
+            otherCorners.forEach(({ x, y }) => graphics.lineTo(x, y));
+            // finish at the first corner
+            graphics.lineTo(firstCorner.x, firstCorner.y);
+            app.stage.addChild(graphics);
+        },
+
+        highlight(app, graphics) {
+            graphics.beginFill("0xABCDEF");
+            this.render(app, graphics);
+            graphics.endFill();
+        },
+
+    });
+    const Grid = Honeycomb.defineGrid(Hex);
+
+    canvas.appendChild(app.view);
+
+// set a line style of 1px wide and color #999
+    graphics.lineStyle(1, 0x999999);
 
 
-        let hexY = Math.floor(y / (map.hexHeight + map.sideLength));
-        let hexX = Math.floor((x - (hexY % 2) * map.hexRadius) / map.hexRectangleWidth);
+    const grid = Grid.rectangle({ width: 10, height: 10 });
+    grid.forEach(hex => {
+        hex.render(app, graphics);
+    });
 
-        let screenX = hexX * map.hexRectangleWidth + ((hexY % 2) * map.hexRadius);
-        let screenY = hexY * (map.hexHeight + map.sideLength);
 
-        map.clear();
-        map.drawBoard();
+    canvas.addEventListener('click', ({ offsetX, offsetY }) => {
+        const hexCoordinates = Grid.pointToHex([offsetX, offsetY]);
+        const hex = grid.get(hexCoordinates);
 
-        // Check if the mouse's coords are on the board
-        if(hexX >= 0 && hexX < map.boardWidth) {
-            if(hexY >= 0 && hexY < map.boardHeight) {
-                //map.ctx.globalAlpha = 0.5; 0 - invisible, 1 - visible
-                map.drawHexagon(screenX, screenY, true);
-            }
+        if (hex) {
+            hex.highlight(app, graphics);
+            console.log(hex.toPoint());
+            console.log(hex.coordinates());
+            App.game.send({ sent_by: $('#user_id').val(), coordinates: hex.coordinates() })
+
         }
     });
-    /*
 
+    canvas.addEventListener('mousemove', ({ offsetX, offsetY }) => {
+        app.stage.removeChild(graphics);
+        graphics.clear();
+        graphics.lineStyle(1, 0x999999);
+        grid.forEach(hex => {
+            hex.render(app, graphics);
+        });
+        const hexCoordinates = Grid.pointToHex([offsetX, offsetY]);
+        const hex = grid.get(hexCoordinates);
+        if (hex) {
+            hex.highlight(app, graphics)
+        }
+    });
+
+    function renderSprites(spritesArray){
+
+        console.log('here');
+        graphics.lineStyle(2, 0x999999);
+    }
+/*
     canvas.addEventListener("mousedown", function(eventInfo) {
         let x = eventInfo.offsetX || eventInfo.layerX;
         let y = eventInfo.offsetY || eventInfo.layerY;
@@ -53,3 +102,7 @@ document.addEventListener('turbolinks:load', function(){
     });*/
 });
 
+function onClick(){
+    console.log('here');
+    graphics.lineStyle(2, 0x999999);
+}

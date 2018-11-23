@@ -13,4 +13,6 @@
 //= require jquery
 //= require rails-ujs
 //= require turbolinks
+//= require pixi
+//= require honeycomb.min
 //= require_tree .

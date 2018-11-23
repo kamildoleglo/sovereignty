@@ -12,6 +12,8 @@ class GamesController < ApplicationController
   # GET /games/1.json
   def show
     @map = @game.map
+    @uuid = cookies[:uuid] || SecureRandom.uuid
+    cookies[:uuid] = @uuid
   end
 
   # GET /games/new

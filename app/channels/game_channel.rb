@@ -5,7 +5,6 @@ class GameChannel < ApplicationCable::Channel
     stream_from "game_channel_#{game_id}"
     #Entity.new(game_id:game_id, user_id
     #: params[:user_id]
-    # stream_from "game_channel_#{game.id}"
   end
 
   def unsubscribed
@@ -15,6 +14,6 @@ class GameChannel < ApplicationCable::Channel
   end
 
   def receive(data)
-    p data['screen_x']
+    p data['coordinates']
   end
 end
